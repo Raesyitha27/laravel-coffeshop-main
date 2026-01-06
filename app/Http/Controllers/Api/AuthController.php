@@ -1,11 +1,10 @@
 <?php
 
-// app/Http/Controllers/Api/AuthController.php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -66,6 +65,35 @@ class AuthController extends Controller
         ], 201);
     }
     
+    public function changePassword(Request $request) {
+        // 1. Ambil ID user yang sedang login via JWT
+        $userId = auth('api')->id(); 
+        
+        // 2. Cari user di database menggunakan Model User agar method update() tersedia
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User tidak ditemukan'], 404);
+        }
+
+        // 3. Validasi password lama
+        if (!Hash::check($request->old_password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Password lama tidak sesuai'
+            ], 401); 
+        }
+
+        // 4. Update password baru menggunakan save() atau update()
+        $user->password = Hash::make($request->new_password);
+        $user->save(); // Method save() lebih stabil untuk instance model tunggal
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password berhasil diganti'
+        ]);
+    }
+    
     public function logout()
     {
         auth('api')->logout();
@@ -77,5 +105,7 @@ class AuthController extends Controller
     {
         return response()->json(auth('api')->user());
     }
+
+   
 }
 ?>

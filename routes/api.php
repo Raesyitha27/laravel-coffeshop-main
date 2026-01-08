@@ -47,10 +47,18 @@ Route::middleware('auth.jwt')->group(function () {
     Route::delete('wishlist/{menu_id}', [WishlistController::class, 'destroy']);
     
     // 4. Cart System
-  Route::get('cart', [CartController::class, 'index']);
-Route::post('cart', [CartController::class, 'store']);
-Route::put('cart/{menu_id}', [CartController::class, 'update']);   // lama
-Route::patch('cart/{menu_id}', [CartController::class, 'update']); // BARU
-Route::delete('cart/{menu_id}', [CartController::class, 'destroy']);
-       Route::apiResource('orders', OrderController::class);
+    Route::get('cart', [CartController::class, 'index']);
+    Route::post('cart', [CartController::class, 'store']);
+    Route::put('cart/{menu_id}', [CartController::class, 'update']);   // lama
+    Route::patch('cart/{menu_id}', [CartController::class, 'update']); // BARU
+    Route::delete('cart/{menu_id}', [CartController::class, 'destroy']);
+    //Route::apiResource('orders', OrderController::class);
+
+   Route::middleware('auth.jwt')->group(function () { 
+    // ... (route auth, menu, wishlist, cart)
+
+    // Route Order
+    Route::post('orders', [OrderController::class, 'store']); 
+});
+
 });

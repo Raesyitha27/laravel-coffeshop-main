@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\CartController;
-
+use App\Http\Controllers\Api\OrderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,8 +47,10 @@ Route::middleware('auth.jwt')->group(function () {
     Route::delete('wishlist/{menu_id}', [WishlistController::class, 'destroy']);
     
     // 4. Cart System
-    Route::get('cart', [CartController::class, 'index']);
-    Route::post('cart', [CartController::class, 'store']);
-    Route::put('/cart/{menu_id}', [CartController::class, 'update']);
-    Route::delete('cart/{menu_id}', [CartController::class, 'destroy']);
+  Route::get('cart', [CartController::class, 'index']);
+Route::post('cart', [CartController::class, 'store']);
+Route::put('cart/{menu_id}', [CartController::class, 'update']);   // lama
+Route::patch('cart/{menu_id}', [CartController::class, 'update']); // BARU
+Route::delete('cart/{menu_id}', [CartController::class, 'destroy']);
+       Route::apiResource('orders', OrderController::class);
 });

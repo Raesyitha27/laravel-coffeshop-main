@@ -6,14 +6,8 @@ use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-*/
 
-// --- A. Route Terbuka (Public) ---
-// Route di sini bisa diakses tanpa login/token
+
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']); 
     Route::post('register', [AuthController::class, 'register']);
@@ -49,8 +43,8 @@ Route::middleware('auth.jwt')->group(function () {
     // 4. Cart System
     Route::get('cart', [CartController::class, 'index']);
     Route::post('cart', [CartController::class, 'store']);
-    Route::put('cart/{menu_id}', [CartController::class, 'update']);   // lama
-    Route::patch('cart/{menu_id}', [CartController::class, 'update']); // BARU
+    Route::put('cart/{menu_id}', [CartController::class, 'update']);   
+    Route::patch('cart/{menu_id}', [CartController::class, 'update']); 
     Route::delete('cart/{menu_id}', [CartController::class, 'destroy']);
     //Route::apiResource('orders', OrderController::class);
 

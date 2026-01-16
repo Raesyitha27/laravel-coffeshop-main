@@ -22,9 +22,9 @@ class AuthController extends Controller
     {
         return response()->json([
             'success' => true,
-            'access_token' => $token, // JWT utuh yang dikirim ke Android
+            'access_token' => $token, 
             'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60, // dalam menit waktu kedaluwarsa
+            'expires_in' => JWTAuth::factory()->getTTL() * 180, // dalam menit waktu kedaluwarsa
             'user' => auth('api')->user()
         ]);
     }
@@ -33,7 +33,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        // Mencoba membuat token JWT
+        
         if (! $token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
@@ -46,7 +46,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6|confirmed', // 'confirmed' berarti harus ada field password_confirmation
+            'password' => 'required|string|min:6|confirmed', 
         ]);
 
         if($validator->fails()){
@@ -72,8 +72,7 @@ class AuthController extends Controller
         // 2. Cari user di database menggunakan Model User agar method update() tersedia
         $user = User::find($userId);
 
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User tidak ditemukan'], 404);
+        if (!$user) {            return response()->json(['success' => false, 'message' => 'User tidak ditemukan'], 404);
         }
 
         // 3. Validasi password lama
@@ -84,9 +83,9 @@ class AuthController extends Controller
             ], 401); 
         }
 
-        // 4. Update password baru menggunakan save() atau update()
+        
         $user->password = Hash::make($request->new_password);
-        $user->save(); // Method save() lebih stabil untuk instance model tunggal
+        $user->save(); 
 
         return response()->json([
             'success' => true,
@@ -100,7 +99,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Successfully logged out']);
     }
     
-    // Metode untuk mengambil data pengguna dari token (Contoh endpoint dilindungi)
+    
     public function me()
     {
         return response()->json(auth('api')->user());

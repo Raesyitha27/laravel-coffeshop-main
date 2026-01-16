@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
-    // 1. Ambil semua isi keranjang milik user yang login
+    
     public function index()
     {
         $carts = Cart::where('user_id', auth()->id())->get();

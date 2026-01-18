@@ -38,10 +38,20 @@ class MenuResource extends Resource
    public static function table(Table $table): Table
 {
     return $table
+        ->poll('1s')
         ->columns([
-            Tables\Columns\TextColumn::make('nama_menu')->label('Nama Kopi'),
-            Tables\Columns\TextColumn::make('harga')->money('IDR'),
-            Tables\Columns\TextColumn::make('quantity'),
+            Tables\Columns\ImageColumn::make('picUrl')
+                ->label('Foto')
+                ->circular(),
+            Tables\Columns\TextColumn::make('nama_menu')
+                ->label('Nama Kopi')
+                ->searchable(),
+            Tables\Columns\TextColumn::make('harga')
+                ->money('IDR'),
+            Tables\Columns\TextColumn::make('quantity')
+                ->label('Stok Terkini')
+                ->color(fn (int $state): string => $state <= 5 ? 'danger' : 'success')
+                ->sortable(),
         ]);
 }
 
